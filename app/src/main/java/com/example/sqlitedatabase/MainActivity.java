@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         update_btn = findViewById(R.id.edit);
         delete_btn = findViewById(R.id.delete);
 
+//        Inserting the data
         insert_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+//        Displaying the data
         show_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,32 +72,50 @@ public class MainActivity extends AppCompatActivity {
                 }
                 StringBuffer buffer = new StringBuffer();
                 while (cursor.moveToNext()){
-                buffer.append("ID" + cursor.getString(0)+"\n");
-                buffer.append("Name" + cursor.getString(1)+"\n");
-                buffer.append("Marks" + cursor.getString(2)+"\n");
-                buffer.append("Remarks" + cursor.getString(3)+"\n");
+                buffer.append("ID: " + cursor.getString(0)+"\n");
+                buffer.append("Name: " + cursor.getString(1)+"\n");
+                buffer.append("Marks: " + cursor.getString(2)+"\n");
+                buffer.append("Remarks: " + cursor.getString(3)+"\n\n");
                 }
                 show("Data", buffer.toString());
             }
         });
+        
+//        Updating the data
         update_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                boolean isUpdate = myDB.updateData(
+                        txt_id.getText().toString().trim(),
+                        txt_name.getText().toString().trim(),
+                        txt_marks.getText().toString().trim(),
+                        txt_remarks.getText().toString().trim()
+                );
+                if (isUpdate){
+                    Toast.makeText(MainActivity.this, "Data Updated", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "Data Not Updated", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+//        Deleting the data
         delete_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Integer deleteData = myDB.deleteData(txt_id.getText().toString().trim());
+                if (deleteData == 1){
+                    Toast.makeText(MainActivity.this, "Data Has Been Deleted", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MainActivity.this, "Data couldn't be deleted", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
     public void show(String title, String Message){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(true);
-        builder.setTitle("Data");
-        builder.setMessage("Message");
+        builder.setTitle(title);
+        builder.setMessage(Message);
         builder.show();
     }
 }
